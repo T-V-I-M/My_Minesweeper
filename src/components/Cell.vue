@@ -1,13 +1,19 @@
 <script setup>
-    import { ref } from 'vue';
+    const props = defineProps({
+        cell: Object
+    })
 
-    function click () {
-
+    function getStyle() {
+        return (
+            `background-color:${props.cell.is_mine ? "rgba(255, 0, 0, 0.162)" : "rgba(0, 0, 0, 0.038)" };
+            
+            `
+        )
     }
 </script>
 
 <template>
-    <div class="Cell"><slot></slot></div>
+    <div class="Cell" :style="getStyle()">{{ cell.is_open ? cell.mines_number : '' }}</div>
 </template>
 
 <style scoped>
@@ -21,6 +27,8 @@
         font-size: small;
         width: 40px;
         border-color: black;
+        border-width: 1px;
+        border-style: solid;
     }
     .Cell:hover {
         background-color: rgba(0, 0, 0, 0.162);
