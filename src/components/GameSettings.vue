@@ -61,6 +61,7 @@
     }
     .level {
         padding: 10px;
+        cursor: pointer;
     }
     .level:hover {
         background-color:rgba(128, 128, 128, 0.141);

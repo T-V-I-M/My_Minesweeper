@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import GameSettings from '../components/GameSettings.vue'
-import Game from '../components/Game.vue'
+import Game from '../components/game.vue'
 
 
 const routes = [
