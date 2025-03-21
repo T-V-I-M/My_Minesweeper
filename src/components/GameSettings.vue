@@ -4,18 +4,18 @@
 
     const width = ref(8)
     const height = ref(8)
-    const mines_number = ref(10)
+    const minesNumber = ref(10)
 
-    function ChangeSetting(_width, _height, _mines_number) {   
+    function ChangeSetting(_width, _height, _minesNumber) {   
         width.value = _width
         height.value = _height
-        mines_number.value = _mines_number
+        minesNumber.value = _minesNumber
 
         StartGame()
     }
 
     function StartGame() {
-        router.push({path: `/game/${width.value}/${height.value}/${mines_number.value}`})
+        router.push({path: `/game/${width.value}/${height.value}/${minesNumber.value}`})
     }
 
 </script>
@@ -47,8 +47,8 @@
                 <input type="text" id="width" name="width" v-model="width"><br>
                 <label for="height">Высота поля</label><br>
                 <input type="text" id="height" name="height" v-model="height"><br>
-                <label for="mines_number">Колличество мин</label><br>
-                <input type="text" id="mines_number" name="mines_number" v-model="mines_number">
+                <label for="minesNumber">Колличество мин</label><br>
+                <input type="text" id="minesNumber" name="minesNumber" v-model="minesNumber">
                 <button>Старт</button>
             </form>
         </div>

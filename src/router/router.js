@@ -6,7 +6,7 @@ import Game from '../components/game.vue'
 
 const routes = [
     { path: '/', component:GameSettings },
-    { path: '/game/:width/:height/:mines_number', component: Game, props: true }
+    { path: '/game/:width/:height/:minesNumber', component: Game, props: true }
 ]
 
 const router = createRouter({
