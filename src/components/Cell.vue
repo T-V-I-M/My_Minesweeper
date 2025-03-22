@@ -1,20 +1,21 @@
 <script setup>
+    import { computed } from 'vue'
+
     const props = defineProps({
         cell: Object
     })
 
-    function getStyle() {
+    const getStyle = computed(() => {
         if (props.cell.is_open) {
-            return 'Cell Open'
+            return props.cell.is_mine ? 'Cell Mine' : 'Cell Open'
         }
-        else {
-            return 'Cell'
-        }
-    }
+        return props.cell.flag ? 'Cell Flag' : 'Cell'
+    });
 </script>
 
 <template>
-    <div :class="getStyle()">{{ cell.is_open ? cell.mines_number : '' }}</div>
+    <div v-if="cell.flag" :class="getStyle">{{ cell.flag }}</div>
+    <div v-else :class="getStyle">{{ cell.is_open ? cell.mines_number : '' }}</div>
 </template>
 
 <style scoped>
@@ -33,6 +34,10 @@
         
         &.Open {
             background-color: rgba(0, 0, 0, 0.114);
+        }
+
+        &.Mine {
+            background-color: rgba(255, 0, 0, 0.252);
         }
     }
     .Cell:hover {

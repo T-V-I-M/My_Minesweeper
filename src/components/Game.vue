@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted, ref } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
     import Cell from './Cell.vue'
 
     const props = defineProps({
@@ -10,18 +10,24 @@
 
     const field = ref([])
     const gameStatus = ref('start')
+    const cellsIsOpenCounter = ref(0)
+    const globalCounter = ref(props.minesNumber)
+    const correctFlagCount = ref(0)
+    const cellFlags = ['', 'flag', 'question']
 
+    //Инициализация игры
     function StartGame() {
         for (let x = 0; x < props.height * props.width; x++) {
             field.value.push({
                 is_open: false,
                 is_mine: false,
-                is_flag: false,
+                flag: cellFlags[0],
                 mines_number: null
             })
         }
     }
 
+    //Расставить мины по полю
     function MineGeneratePlacement(ids) {
         let remainingMines = props.minesNumber
         let x = 0
@@ -43,32 +49,62 @@
         }
     }
 
-    function getFieldStyle() {
+    const getFieldStyle = computed(() => {
         return `grid-template-columns: repeat(${props.width}, 1fr);`
-    }
+    })
 
-    function onClickCell(id) {
-        if (gameStatus.value === 'start') {
-            MineGeneratePlacement(getIdCellsOfCell(id))
-            FillCountMineNearCells()
-            gameStatus.value = 'play'
-        }
-        else if (gameStatus.value === 'stop') {
-            return
-        }
-        
-        if (!field.value[id].is_open){
-            if(field.value[id].is_mine){
-                gameStatus.value = 'stop'
-                alert('Вы проиграли!')
+    //Обработать нажатие ЛКМ по клетке
+    function onLeftClickCell(id) {
+        if (!field.value[id].is_open && !field.value[id].flag && gameStatus.value !== 'stop') {
+            if (gameStatus.value == 'start') {
+                MineGeneratePlacement(getIdCellsOfCell(id))
+                FillCountMineNearCells()
+                gameStatus.value = 'play'
             }
-            else {
-                CellsOpen(id)
-                field.value[id].is_open = true
-            }
+            
+            CellsOpen(id)
+            
+            isWin(field.value[id].is_mine)
         }
     }
 
+    function isWin(is_mine) {
+        if (field.value.length - cellsIsOpenCounter.value == props.minesNumber || correctFlagCount.value == props.minesNumber) {
+            gameStatus.value = 'stop'
+            field.value.forEach((cell) => {cell.is_open = true, cell.flag = cellFlags[0]})
+            alert("Вы победили!")
+        }
+        else if (is_mine) {
+            gameStatus.value = 'stop'
+            field.value.forEach((cell) => {cell.is_open = true, cell.flag = cellFlags[0]})
+            alert('Вы проиграли!')
+        }
+    }
+
+    //Обработать нажатие ПКМ по клетке
+    function onRightClickCell(id) {
+        if (!field.value[id].is_open && gameStatus.value !== 'stop') {
+            const currentFlagIndex = cellFlags.indexOf(field.value[id].flag);
+            field.value[id].flag = cellFlags[(currentFlagIndex + 1) % cellFlags.length]
+            if(currentFlagIndex == 0) {
+                if (globalCounter.value <= 0) {
+                    field.value[id].flag = cellFlags[(currentFlagIndex + 2) % cellFlags.length]
+                }
+                else {
+                    globalCounter.value--
+                    if (field.value[id].is_mine) {
+                        correctFlagCount.value++
+                        isWin(false)
+                    }
+                }
+            }
+            else if (currentFlagIndex == 1) {
+                globalCounter.value++
+            }
+        }
+    }
+
+    //Получить id клеток вокруг нажатой клетки
     function getIdCellsOfCell(id) {
         let IdCells = []
         for (let i = -1; i <= 1; i++) {
@@ -82,6 +118,7 @@
         return IdCells
     }
 
+    //Заполнить клетки числом мин вокруг i клетки
     function FillCountMineNearCells() {
         for (let id = 0; id < field.value.length; id++) {
             if (!field.value[id].is_mine) {
@@ -94,16 +131,13 @@
         }
     }
 
+    //Открыть клетку
     function CellsOpen(id) {
-        if (!field.value[id].is_open) {
-            if (!field.value[id].mines_number) {
-                getIdCellsOfCell(id).forEach((cellId) => {
-                    field.value[id].is_open = true
-                    CellsOpen(cellId)
-                })
-            }
-            else {
-                field.value[id].is_open = true
+        if (!field.value[id].is_open && !field.value[id].flag) {
+            field.value[id].is_open = true
+            cellsIsOpenCounter.value++
+            if (!field.value[id].mines_number && !field.value[id].is_mine) {
+                getIdCellsOfCell(id).forEach((cellId) => { CellsOpen(cellId) })
             }
         }
     }
@@ -117,12 +151,17 @@
 <template>
     <div class="Main">
         <div class="GameInfo">
-            
+            <div class="Counter">
+                {{ globalCounter }}
+            </div>
+            <div class="GameStatus">
+                {{ gameStatus }}
+            </div>
         </div>
         <div class="conteiner">
-            <div class="Field" :style="getFieldStyle()">
-            <Cell v-for="(cell, id) in field" :key="id" @mousedown.left="onClickCell(id)" @mousedown.middle="" :cell="cell"></Cell>
-        </div>
+            <div class="Field" :style="getFieldStyle">
+                <Cell v-for="(cell, id) in field" :key="id" @mousedown.left="onLeftClickCell(id)" @contextmenu.prevent="onRightClickCell(id)" :cell="cell"></Cell>
+            </div>
         </div>
     </div>
 </template>
