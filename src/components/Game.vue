@@ -1,6 +1,7 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue';
     import Cell from './Cell.vue'
+    import Timer from './Timer.vue';
 
     const props = defineProps({
         width: Number,
@@ -143,7 +144,15 @@
     }
 
     onMounted(() => {
-        StartGame()
+        try {
+            if (props.height > 32 || props.width > 32 || props.minesNumber > (props.height * props.width * 0.8)) {
+                alert("Невозможно запустить игру!")
+                return
+            }
+            StartGame()
+        } catch (error) {
+            console.log(error)
+        }
     })
 
 </script>
@@ -157,6 +166,7 @@
             <div class="GameStatus">
                 {{ gameStatus }}
             </div>
+            <Timer :gameStatus="gameStatus" />
         </div>
         <div class="conteiner">
             <div class="Field" :style="getFieldStyle">
