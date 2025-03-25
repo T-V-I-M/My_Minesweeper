@@ -203,10 +203,10 @@
                 </v-row>
                 <v-row justify="center" align="center">
                     <v-col cols="auto" justify="center" align="center">
-                        <v-btn variant="plain" size="small" icon="mdi-home" @click="router.push({path:'/'})"></v-btn>
+                        <v-btn variant="plain" size="small" icon="mdi-home" @click="router.push({path:'/My_Minesweeper/'})"></v-btn>
                     </v-col>
                     <v-col cols="auto" justify="center" align="center">
-                        <v-btn variant="plain" size="small" icon="mdi-podium-gold" @click="router.push({path:'/leaderboard'})"></v-btn>
+                        <v-btn variant="plain" size="small" icon="mdi-podium-gold" @click="router.push({path:'/My_Minesweeper/leaderboard'})"></v-btn>
                     </v-col>
                     <v-col cols="auto" justify="center" align="center">
                         <v-btn variant="plain" size="small" icon="mdi-restart" @click="RestartGame()"></v-btn>

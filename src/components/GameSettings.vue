@@ -22,7 +22,7 @@ import { VContainer } from 'vuetify/components';
             alert("Невозможно запустить игру!")
             return
         }
-        router.push({path: `/game/${width.value}/${height.value}/${minesNumber.value}`})
+        router.push({path: `/My_Minesweeper/game/${width.value}/${height.value}/${minesNumber.value}`})
     }
 
 </script>
