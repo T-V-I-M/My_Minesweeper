@@ -28,8 +28,9 @@
         aspect-ratio: 1 / 1;
         font-family: fantasy;
         align-items: center;
-        font-size: larger;
+        font-size: small;
         width: 33px;
+
         
         &.Open {
             background-color: #f3f3f3;
@@ -50,8 +51,8 @@
     }
 
     .Text {
-        position: absolute;
-
+        position: relative;
+        transform: scale(1.7);
     }
 
 </style>

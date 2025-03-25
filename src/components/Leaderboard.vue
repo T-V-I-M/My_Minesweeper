@@ -22,7 +22,7 @@ import { ref } from 'vue';
             </div>
 
             <v-responsive class="mt-4 elevation-2 bg-grey-lighten-3 rounded-lg">
-                <v-data-table :headers="headers" :items="Leaderboard.scores" no-data-text="Похоже, еще никто не победил! Стань первым!" fixed-header class="px-5">
+                <v-data-table :headers="headers" :items="Leaderboard.scores" items-per-page-text="Элементов на странице:" no-data-text="Похоже, еще никто не победил! Стань первым!" fixed-header class="px-5">
                     <template v-slot:item.place="{ index }">
                         {{ index + 1 }}
                     </template>

@@ -220,6 +220,7 @@
 <style scoped>
     .v-container {
         width: fit-content;
+        max-width: 100%;
     }
 
     .conteiner{
@@ -229,6 +230,7 @@
 
     .Field {
         display: grid;
+        overflow-x: overlay;    
     }
     .Main {
         display: flex;
